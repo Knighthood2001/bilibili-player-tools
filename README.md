@@ -21,6 +21,8 @@ A collection of Tampermonkey userscripts for Bilibili. All functions are impleme
 - 记忆上次选择的倍速，切换分集/视频自动沿用
 - 纯模拟页面点击，与手动操作逻辑一致
 
+![alt text](imgs/image.png)
+
 ## 文件说明 | File List
 ```
 bilibili-player-tools/
@@ -39,6 +41,8 @@ bilibili-player-tools/
 2. 将对应脚本的完整代码粘贴到编辑区
 3. 按下 `Ctrl + S` 保存，脚本自动启用
 4. 打开 Bilibili 视频页面，功能即刻生效
+
+![alt text](imgs/image1.png)
 
 ### 倍速脚本使用说明
 1. 视频页面右下角会出现 `设置倍速` 悬浮按钮
