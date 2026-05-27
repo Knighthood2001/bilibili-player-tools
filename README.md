@@ -6,6 +6,8 @@
 一套适用于 **Bilibili（哔哩哔哩）** 的油猴(Tampermonkey)脚本集合，基于模拟页面点击实现功能，提升视频观看体验。
 
 A collection of Tampermonkey userscripts for Bilibili. All functions are implemented by simulating mouse clicks on the player.
+## 痛点
+我在观看一些学习视频的时候，由于其是分p播放，每次切换分集都需要手动点击字幕按钮，非常麻烦。
 
 ## 功能列表 | Features
 ### 1. 自动开启中文字幕 | Auto Chinese Subtitle
@@ -42,11 +44,6 @@ bilibili-player-tools/
 1. 视频页面右下角会出现 `设置倍速` 悬浮按钮
 2. 点击按钮展开菜单，选择需要的播放速度
 3. 切换视频/分集时，会自动沿用上一次设置的倍速
-
-## 注意事项 | Notes
-1. 脚本仅适配 Bilibili 网页版播放器，移动端客户端不生效
-2. 若页面布局、播放器代码更新导致功能失效，请及时更新脚本
-3. 脚本无广告、无后台请求，仅操作页面播放器元素
 
 ## 开源协议 | License
 MIT License
