@@ -7,6 +7,8 @@
 
 A Tampermonkey userscript for Bilibili. Combines playback speed and Chinese subtitle toggle into a single floating panel — set once, applies to all videos automatically.
 
+视频讲解：[https://www.bilibili.com/video/BV1hijE6EEY7](https://www.bilibili.com/video/BV1hijE6EEY7)
+
 ## 痛点 | Problem
 观看分P学习视频时，每次切集都要：
 - 手动打开倍速菜单 → 选倍速
