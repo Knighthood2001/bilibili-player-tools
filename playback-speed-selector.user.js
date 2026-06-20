@@ -183,7 +183,7 @@
     }
 
     // 应用字幕(打开菜单 → 选中文 / 关闭字幕)
-    // 主路径 DOM 用你测过的:.bpx-player-ctrl-subtitle + [data-lan="ai-zh"]
+    // 关闭逻辑沿用 auto-chinese-subtitle.user.js 中实测通过的实现
     function setSubtitle(state) {
         const subBtn = document.querySelector('.bpx-player-ctrl-subtitle');
         if (!subBtn) {
@@ -191,17 +191,15 @@
             return;
         }
 
-        // 打开菜单
+        // 打开菜单(无论开启还是关闭,都要先把菜单叫出来)
         subBtn.click();
 
-        // 用你测过的 600ms 等待
+        // 用你测过的 600ms 等待菜单渲染
         setTimeout(() => {
-            // 主路径:中文项 [data-lan="ai-zh"]
-            const zhItem = document.querySelector('[data-lan="ai-zh"]');
-
             if (state === 'on') {
+                // 开启:点 [data-lan="ai-zh"]
+                const zhItem = document.querySelector('[data-lan="ai-zh"]');
                 if (zhItem) {
-                    // 检查是否已激活(避免重复点击)
                     const cls = zhItem.className || '';
                     if (!cls.includes('active')) {
                         zhItem.click();
@@ -213,29 +211,21 @@
                     console.warn('[B站工具] 此视频没有中文字幕选项(ai-zh)');
                 }
             } else {
-                // 关闭字幕:实际 DOM 是 .bpx-player-ctrl-subtitle-close-switch
-                // 开启时带 .bpx-state-active 类(注意不是 active)
+                // 关闭:沿用你测试过的逻辑,直接点 .bpx-player-ctrl-subtitle-close-switch
+                // 同时也处理一下翻译字幕的关闭开关(以防翻译字幕也开着)
                 const mainSwitch = document.querySelector('.bpx-player-ctrl-subtitle-close-switch');
                 const transSwitch = document.querySelector('.bpx-player-ctrl-translation-close-switch');
 
-                let closed = false;
-
-                if (mainSwitch && mainSwitch.classList.contains('bpx-state-active')) {
+                if (mainSwitch) {
                     mainSwitch.click();
-                    closed = true;
                     console.log('[B站工具] ✅ 已点击 .bpx-player-ctrl-subtitle-close-switch 关闭原声字幕');
                 } else {
-                    console.log('[B站工具] 原声字幕开关未激活');
+                    console.warn('[B站工具] 没找到 .bpx-player-ctrl-subtitle-close-switch');
                 }
 
-                if (transSwitch && transSwitch.classList.contains('bpx-state-active')) {
+                if (transSwitch) {
                     transSwitch.click();
-                    closed = true;
                     console.log('[B站工具] ✅ 已点击 .bpx-player-ctrl-translation-close-switch 关闭翻译字幕');
-                }
-
-                if (!closed) {
-                    console.log('[B站工具] 字幕已关闭,无需操作');
                 }
             }
         }, 600);

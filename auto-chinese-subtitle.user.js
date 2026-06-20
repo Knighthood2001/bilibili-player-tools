@@ -32,6 +32,30 @@
             if (chineseOption) {
                 chineseOption.click();
                 console.log("✅ 已选择中文字幕");
+
+                // 3. 3秒后自动关闭字幕
+                setTimeout(() => {
+                    // 关闭开关在菜单内部,菜单收起来时 display:none
+                    // 所以要先点开菜单,再点关闭开关
+                    let subtitleBtn = document.querySelector('.bpx-player-ctrl-subtitle');
+                    if (!subtitleBtn) {
+                        console.log("❌ 没找到字幕按钮,无法关闭");
+                        return;
+                    }
+                    subtitleBtn.click();  // 打开菜单
+                    console.log("✅ 已再次点开字幕菜单");
+
+                    // 等菜单展开(和开启时一样 600ms)
+                    setTimeout(() => {
+                        const closeSwitch = document.querySelector('.bpx-player-ctrl-subtitle-close-switch');
+                        if (closeSwitch) {
+                            closeSwitch.click();
+                            console.log("✅ 3秒后已自动关闭字幕");
+                        } else {
+                            console.log("❌ 没找到关闭字幕开关 .bpx-player-ctrl-subtitle-close-switch");
+                        }
+                    }, 600);
+                }, 3000);
             } else {
                 console.log("❌ 没找到中文选项");
             }
