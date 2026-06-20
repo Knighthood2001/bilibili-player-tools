@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站播放工具(倍速+字幕)
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      2.0
 // @description  悬浮面板设置默认倍速和字幕,设置后所有视频自动按此执行
 // @author       knighthood
 // @match        *://www.bilibili.com/video/*
@@ -134,6 +134,14 @@
             applyPanelPos();
         }
         refreshActive();
+    });
+
+    // 点空白处关闭面板
+    document.addEventListener('click', (e) => {
+        if (panel.style.display !== 'block') return;     // 面板没开,不处理
+        if (panel.contains(e.target)) return;            // 点在面板内,不处理
+        if (toggleBtn.contains(e.target)) return;        // 点在按钮上,不处理
+        panel.style.display = 'none';
     });
 
     // ===== 拖动支持 =====
