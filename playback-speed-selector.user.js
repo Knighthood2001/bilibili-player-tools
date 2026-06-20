@@ -35,7 +35,9 @@
             color: #fff;
             border: none;
             border-radius: 20px;
-            cursor: pointer;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
             font-size: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
@@ -121,10 +123,104 @@
     `;
     document.body.appendChild(panel);
 
-    // 展开/收起
+    // 展开/收起(区分拖动和点击)
     toggleBtn.addEventListener('click', () => {
+        if (didDrag) {
+            didDrag = false;
+            return;
+        }
         panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        if (panel.style.display === 'block') {
+            applyPanelPos();
+        }
         refreshActive();
+    });
+
+    // ===== 拖动支持 =====
+    const STORAGE_POS = 'bili_tool_pos';
+    let posX, posY;
+    let isDragging = false;
+    let didDrag = false;
+    let dragStartX, dragStartY, posStartX, posStartY;
+
+    // 读取/初始化位置
+    (function initPos() {
+        const saved = localStorage.getItem(STORAGE_POS);
+        if (saved) {
+            try {
+                const p = JSON.parse(saved);
+                posX = p.x;
+                posY = p.y;
+            } catch (e) {
+                posX = window.innerWidth - 100;
+                posY = window.innerHeight - 100;
+            }
+        } else {
+            posX = window.innerWidth - 100;
+            posY = window.innerHeight - 100;
+        }
+        toggleBtn.style.left = posX + 'px';
+        toggleBtn.style.top = posY + 'px';
+        toggleBtn.style.right = 'auto';
+        toggleBtn.style.bottom = 'auto';
+    })();
+
+    // 面板跟随按钮
+    function applyPanelPos() {
+        const panelW = panel.offsetWidth || 200;
+        const panelH = panel.offsetHeight || 150;
+        const btnW = toggleBtn.offsetWidth || 60;
+        const btnH = toggleBtn.offsetHeight || 30;
+        // 默认放在按钮上方
+        let panelTop = posY - panelH - 10;
+        if (panelTop < 10) panelTop = posY + btnH + 10; // 上方空间不够则放下方
+        let panelLeft = posX;
+        if (panelLeft + panelW > window.innerWidth - 10) {
+            panelLeft = window.innerWidth - panelW - 10;
+        }
+        if (panelLeft < 10) panelLeft = 10;
+        panel.style.left = panelLeft + 'px';
+        panel.style.top = panelTop + 'px';
+        panel.style.right = 'auto';
+        panel.style.bottom = 'auto';
+    }
+
+    // 拖动事件
+    toggleBtn.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        isDragging = true;
+        didDrag = false;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        posStartX = posX;
+        posStartY = posY;
+        toggleBtn.style.cursor = 'grabbing';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            didDrag = true;
+        }
+        if (didDrag) {
+            posX = Math.max(0, Math.min(posStartX + dx, window.innerWidth - toggleBtn.offsetWidth));
+            posY = Math.max(0, Math.min(posStartY + dy, window.innerHeight - toggleBtn.offsetHeight));
+            toggleBtn.style.left = posX + 'px';
+            toggleBtn.style.top = posY + 'px';
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            if (didDrag) {
+                localStorage.setItem(STORAGE_POS, JSON.stringify({ x: posX, y: posY }));
+            }
+            isDragging = false;
+            toggleBtn.style.cursor = 'move';
+        }
     });
 
     // 刷新高亮
